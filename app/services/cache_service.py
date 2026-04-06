@@ -1,9 +1,9 @@
-from app.cache.cache_cluster import CacheCluster
+from app.cache.redis_client import RedisClient
 from app.db.db import Database
 
 class CacheService:
     def __init__(self):
-        self.cache=CacheCluster()
+        self.cache=RedisClient()
         self.db=Database()
     
     def get(self,key):
