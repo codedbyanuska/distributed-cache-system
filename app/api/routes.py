@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from app.services.cache_service import CacheService
 
 router= APIRouter()
@@ -11,16 +11,31 @@ def get_value(key: str):
     value=cache_service.get(key)
 
     if value is None:
-        return {"message": "Key not found"}
+       raise HTTPException(
+           status_code=404,
+           detail=f"Key '{key}' not found"
+       )
     
     return {"key":key, "value":value}
 
 @router.post("/cache")
 
 def set_value(key: str, value:str):
-    return cache_service.set(key,value)
+    try:
+        return cache_service.set(key,value)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
 
 @router.delete("/cache/{key}")
 
 def delete_value(key: str):
-    return cache_service.delete(key)
+    try:
+        return cache_service.delete(key)
+    except Exception as e:
+        raise HTTPException(
+            satus_code=500,
+            detail=str(e)
+        )
